@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:18:40 by atamas            #+#    #+#             */
-/*   Updated: 2024/06/10 17:25:44 by atamas           ###   ########.fr       */
+/*   Updated: 2024/06/21 16:23:17 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,17 @@ int	ft_atol(char *string, int *error)
 	return (number);
 }
 
+void	fill_values(int argc, char **argv, t_table *table, int *error)
+{
+	if (argc == 6)
+		table->rounds = ft_atol(argv[5], error);
+	table->nmbr_of_philos = ft_atol(argv[1], error);
+	table->time_to_die = ft_atol(argv[2], error);
+	table->time_to_eat = ft_atol(argv[3], error);
+	table->time_to_sleep = ft_atol(argv[4], error);
+	table->death = 0; //mutex
+}
+
 int	input_valid(int argc, char **argv, t_table *table)
 {
 	int	error;
@@ -47,12 +58,12 @@ int	input_valid(int argc, char **argv, t_table *table)
 		return (0);
 	}
 	table->rounds = -1;
-	if (argc == 6)
-		table->rounds = ft_atol(argv[5], &error);
-	table->nmbr_of_philos = ft_atol(argv[1], &error);
-	table->time_to_die = ft_atol(argv[2], &error);
-	table->time_to_eat = ft_atol(argv[3], &error);
-	table->time_to_sleep = ft_atol(argv[4], &error);
+	fill_values(argc, argv, table, &error);
+	if (table->nmbr_of_philos > 200)
+	{
+		write(2, "Number of philosophers must be less than 200\n", 45);
+		return (0);
+	}
 	if (error == 1 || table->nmbr_of_philos == 0 || table->time_to_die == 0
 		|| table->time_to_eat == 0 || table->time_to_sleep == 0)
 	{
@@ -65,6 +76,7 @@ int	input_valid(int argc, char **argv, t_table *table)
 int	main(int argc, char **argv)
 {
 	t_table	table;
+	t_philo	philo[300];
 
 	if (!input_valid(argc, argv, &table))
 		return (1);
