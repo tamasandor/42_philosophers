@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:34:15 by atamas            #+#    #+#             */
-/*   Updated: 2024/06/21 16:31:25 by atamas           ###   ########.fr       */
+/*   Updated: 2024/06/21 17:06:25 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ typedef struct s_table
 	int				rounds;
 	pthread_mutex_t	forks[200];
 	t_philo			philos[200];
-	int				death; //mutex
-	int				print; //mutex
+	int				death;
+	pthread_mutex_t	print;
 }	t_table;
-
 #endif
