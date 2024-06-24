@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:34:15 by atamas            #+#    #+#             */
-/*   Updated: 2024/06/21 17:06:25 by atamas           ###   ########.fr       */
+/*   Updated: 2024/06/24 20:27:55 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,9 @@ typedef struct s_table
 	int				death;
 	pthread_mutex_t	print;
 }	t_table;
+
+int		input_valid(int argc, char **argv, t_table *table);
+int		ft_atol(char *string, int *error);
+void	fill_values(int argc, char **argv, t_table *table, int *error);
+
 #endif
