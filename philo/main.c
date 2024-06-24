@@ -6,13 +6,13 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:18:40 by atamas            #+#    #+#             */
-/*   Updated: 2024/06/24 20:26:07 by atamas           ###   ########.fr       */
+/*   Updated: 2024/06/24 20:44:47 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	init_forks(t_table *table)
+int	init_forks_and_philos(t_table *table)
 {
 	int	i;
 
@@ -25,11 +25,13 @@ int	init_forks(t_table *table)
 	}
 	table->philos[0].lfork = &table->forks[0];
 	table->philos[0].rfork = &table->forks[table->nmbr_of_philos - 1];
+	table->philos[0].id = 1;
 	i = 1;
 	while (i < table->nmbr_of_philos)
 	{
 		table->philos[i].lfork = &table->forks[i];
 		table->philos[i].rfork = &table->forks[i - 1];
+		table->philos[i].id = i + 1;
 		i++;
 	}
 	return (0);
@@ -53,6 +55,6 @@ int	main(int argc, char **argv)
 
 	if (!input_valid(argc, argv, &table))
 		return (1);
-	if (init_forks(&table))
+	if (init_forks_and_philos(&table))
 		return (1);
 }
