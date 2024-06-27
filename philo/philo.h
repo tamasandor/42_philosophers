@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:34:15 by atamas            #+#    #+#             */
-/*   Updated: 2024/06/27 15:46:24 by atamas           ###   ########.fr       */
+/*   Updated: 2024/06/27 15:51:31 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,13 @@
 # include <stddef.h>
 # include <sys/time.h>
 
-typedef struct s_table t_table;
+typedef struct s_table	t_table;
 
 typedef struct s_philo
 {
 	int				id; // have to start from 1 //
 	pthread_t		thread;
+	unsigned int	meals;
 	long int		last_meal;
 	pthread_mutex_t	*rfork;
 	pthread_mutex_t	*lfork;

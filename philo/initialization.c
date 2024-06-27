@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 20:25:10 by atamas            #+#    #+#             */
-/*   Updated: 2024/06/27 12:24:48 by atamas           ###   ########.fr       */
+/*   Updated: 2024/06/27 15:51:50 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,43 @@ int	input_valid(int argc, char **argv, t_table *table)
 		return (0);
 	}
 	return (1);
+}
+
+void	destroy_forks(t_table *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->nmbr_of_philos)
+	{
+		pthread_mutex_destroy(&table->forks[i]);
+		i++;
+	}
+}
+
+int	init_forks_and_philos(t_table *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->nmbr_of_philos)
+	{
+		if (pthread_mutex_init(&table->forks[i], NULL) != 0)
+			return (printf("Error initializing mutex for forks\n"), 1);
+		i++;
+	}
+	table->philos[0].lfork = &table->forks[0];
+	table->philos[0].rfork = &table->forks[table->nmbr_of_philos - 1];
+	table->philos[0].id = 1;
+	table->philos[0].table = table;
+	i = 1;
+	while (i < table->nmbr_of_philos)
+	{
+		table->philos[i].lfork = &table->forks[i];
+		table->philos[i].rfork = &table->forks[i - 1];
+		table->philos[i].id = i + 1;
+		table->philos[i].table = table;
+		i++;
+	}
+	return (0);
 }

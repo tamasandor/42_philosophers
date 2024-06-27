@@ -6,14 +6,14 @@
 #    By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/08 17:15:09 by atamas            #+#    #+#              #
-#    Updated: 2024/06/24 20:26:43 by atamas           ###   ########.fr        #
+#    Updated: 2024/06/27 15:45:58 by atamas           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -pthread
 NAME = philo
-SRC = main.c initialization.c
+SRC = main.c initialization.c time.c
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
