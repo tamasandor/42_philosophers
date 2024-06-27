@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:34:15 by atamas            #+#    #+#             */
-/*   Updated: 2024/06/24 20:27:55 by atamas           ###   ########.fr       */
+/*   Updated: 2024/06/27 12:36:18 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <pthread.h>
+# include <stddef.h>
+# include <sys/time.h>
 
 typedef struct s_philo
 {
@@ -33,9 +35,11 @@ typedef struct s_table
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				rounds;
+	long int		start;
 	pthread_mutex_t	forks[200];
 	t_philo			philos[200];
-	int				death;
+	pthread_mutex_t	deadmutex;
+	int				dead;
 	pthread_mutex_t	print;
 }	t_table;
 

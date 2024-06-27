@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 20:25:10 by atamas            #+#    #+#             */
-/*   Updated: 2024/06/24 20:28:10 by atamas           ###   ########.fr       */
+/*   Updated: 2024/06/27 12:24:48 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	fill_values(int argc, char **argv, t_table *table, int *error)
 	table->time_to_die = ft_atol(argv[2], error);
 	table->time_to_eat = ft_atol(argv[3], error);
 	table->time_to_sleep = ft_atol(argv[4], error);
-	table->death = 0;
+	table->dead = 0;
 }
 
 int	input_valid(int argc, char **argv, t_table *table)
