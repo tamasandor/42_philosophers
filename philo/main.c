@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:18:40 by atamas            #+#    #+#             */
-/*   Updated: 2024/06/27 13:34:01 by atamas           ###   ########.fr       */
+/*   Updated: 2024/06/27 15:45:53 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,14 @@ int	init_forks_and_philos(t_table *table)
 	table->philos[0].lfork = &table->forks[0];
 	table->philos[0].rfork = &table->forks[table->nmbr_of_philos - 1];
 	table->philos[0].id = 1;
+	table->philos[0].table = table;
 	i = 1;
 	while (i < table->nmbr_of_philos)
 	{
 		table->philos[i].lfork = &table->forks[i];
 		table->philos[i].rfork = &table->forks[i - 1];
 		table->philos[i].id = i + 1;
+		table->philos[i].table = table;
 		i++;
 	}
 	return (0);
@@ -49,23 +51,38 @@ void	destroy_forks(t_table *table)
 	}
 }
 
-size_t	get_time(void)
-{
-	struct timeval	time;
 
-	if (gettimeofday(&time, NULL) == -1)
-		return (printf("Error getting the time\n"), 0);
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+
+int	is_dead(t_philo *philo)
+{
+	if (philo->last_meal + get_time() > philo->table->time_to_die)
+	{
+		pthread_mutex_lock(&philo->table->deadmutex);
+		pthread_mutex_lock(&philo->table->print);
+		philo->table->dead = 1;
+		printf("%zd %d died\n", philo->table->start - get_time(), philo->id);
+		pthread_mutex_unlock(&philo->table->deadmutex);
+		pthread_mutex_unlock(&philo->table->print);
+		return (1);
+	}
+	return (0);
 }
 
-void	ft_usleep(size_t mseconds)
+void	philo_sleep(t_philo *philo)
 {
-	size_t	start;
-
-	start = get_time();
-	while ((get_time() - start) < mseconds)
-		usleep(100);
+	pthread_mutex_lock(&philo->table->print);
+	printf("%zd %d is sleeping\n", philo->table->start - get_time(), philo->id);
+	pthread_mutex_unlock(&philo->table->print);
+	ft_usleep(philo->table->time_to_sleep);
 }
+
+void	think(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->table->print);
+	printf("%zd %d is thinking\n", philo->table->start - get_time(), philo->id);
+	pthread_mutex_unlock(&philo->table->print);
+}
+
 
 int	main(int argc, char **argv)
 {

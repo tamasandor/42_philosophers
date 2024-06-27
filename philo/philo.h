@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:34:15 by atamas            #+#    #+#             */
-/*   Updated: 2024/06/27 12:36:18 by atamas           ###   ########.fr       */
+/*   Updated: 2024/06/27 15:46:24 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <stddef.h>
 # include <sys/time.h>
 
+typedef struct s_table t_table;
+
 typedef struct s_philo
 {
 	int				id; // have to start from 1 //
@@ -26,16 +28,17 @@ typedef struct s_philo
 	long int		last_meal;
 	pthread_mutex_t	*rfork;
 	pthread_mutex_t	*lfork;
+	t_table			*table;
 }	t_philo;
 
 typedef struct s_table
 {
 	int				nmbr_of_philos;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
+	unsigned int	time_to_die;
+	unsigned int	time_to_eat;
+	unsigned int	time_to_sleep;
 	int				rounds;
-	long int		start;
+	size_t			start;
 	pthread_mutex_t	forks[200];
 	t_philo			philos[200];
 	pthread_mutex_t	deadmutex;
@@ -46,5 +49,7 @@ typedef struct s_table
 int		input_valid(int argc, char **argv, t_table *table);
 int		ft_atol(char *string, int *error);
 void	fill_values(int argc, char **argv, t_table *table, int *error);
+void	ft_usleep(size_t mseconds);
+size_t	get_time(void);
 
 #endif
