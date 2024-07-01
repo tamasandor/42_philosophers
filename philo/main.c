@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:18:40 by atamas            #+#    #+#             */
-/*   Updated: 2024/07/01 17:20:17 by atamas           ###   ########.fr       */
+/*   Updated: 2024/07/01 18:28:42 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	is_dead(t_philo *philo)
 {
-	if ((get_time() - philo->last_meal) - philo->table->start > philo->table->time_to_die)
+	if (get_time() - philo->last_meal > philo->table->time_to_die)
 	{
 		pthread_mutex_lock(&philo->table->deadmutex);
 		pthread_mutex_lock(&philo->table->print);
@@ -53,7 +53,7 @@ int	eat(t_philo *philo)
 {
 	if (philo->table->dead == 1 || is_dead(philo))
 		return (1);
-	if (philo->id % 2 == 0)
+	if (philo->id % 2 == 1)
 	{
 		if (take_right_fork(philo) == 1)
 			return (1);
@@ -90,7 +90,7 @@ int	philo_sleep(t_philo *philo)
 
 int	think(t_philo *philo)
 {
-	if (philo->table->dead == 1)
+	if (philo->table->dead == 1 || is_dead(philo))
 		return (1);
 	pthread_mutex_lock(&philo->table->print);
 	printf("%zd %d is thinking\n", get_time() - philo->table->start, philo->id);
@@ -98,28 +98,38 @@ int	think(t_philo *philo)
 	return (0);
 }
 
-void	routine(t_philo *philo)
+void	*routine(void *prog)
 {
+	t_philo	*philo;
+
+	philo = prog;
 	while (1)
 	{
 		if (eat(philo))
-			return ;
+			break ;
 		if (philo_sleep(philo))
-			return ;
+			break ;
 		if (think(philo))
-			return ;
+			break ;
 	}
-	
+	return (NULL);
 }
 
 int	main(int argc, char **argv)
 {
 	t_table	table;
+	int		i;
 
 	if (!input_valid(argc, argv, &table))
 		return (1);
 	if (init_forks_and_philos(&table))
 		return (1);
 	table.start = get_time();
-	routine(&table.philos[0]);
+	i = 0;
+	while (i < table.nmbr_of_philos)
+	{
+		if (pthread_create(&table.philos[i].thread, NULL, &routine, &table.philos[i]) == 1)
+			return (printf("Error\n"), 1);
+		i++;
+	}
 }
