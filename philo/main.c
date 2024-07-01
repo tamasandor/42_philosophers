@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:18:40 by atamas            #+#    #+#             */
-/*   Updated: 2024/07/01 16:02:44 by atamas           ###   ########.fr       */
+/*   Updated: 2024/07/01 17:20:17 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	is_dead(t_philo *philo)
 {
-	if (philo->last_meal + get_time() > philo->table->time_to_die)
+	if ((get_time() - philo->last_meal) - philo->table->start > philo->table->time_to_die)
 	{
 		pthread_mutex_lock(&philo->table->deadmutex);
 		pthread_mutex_lock(&philo->table->print);
@@ -33,7 +33,7 @@ int	take_right_fork(t_philo *philo)
 		return (1);
 	pthread_mutex_lock(philo->rfork);
 	pthread_mutex_lock(&philo->table->print);
-	printf("%zd %d has taken a fork\n", get_time(), philo->id);
+	printf("%zd %d has taken a fork\n", get_time() - philo->table->start, philo->id);
 	pthread_mutex_unlock(&philo->table->print);
 	return (0);
 }
@@ -44,7 +44,7 @@ int	take_left_fork(t_philo *philo)
 		return (1);
 	pthread_mutex_lock(philo->lfork);
 	pthread_mutex_lock(&philo->table->print);
-	printf("%zd %d has taken a fork\n", get_time(), philo->id);
+	printf("%zd %d has taken a fork\n", get_time() - philo->table->start, philo->id);
 	pthread_mutex_unlock(&philo->table->print);
 	return (0);
 }
@@ -68,7 +68,7 @@ int	eat(t_philo *philo)
 			return (pthread_mutex_unlock(philo->lfork), 1);
 	}
 	pthread_mutex_lock(&philo->table->print);
-	printf("%zd %d is eating\n", get_time(), philo->id);
+	printf("%zd %d is eating\n", get_time() - philo->table->start, philo->id);
 	pthread_mutex_unlock(&philo->table->print);
 	philo->last_meal = get_time() + philo->table->time_to_eat;
 	ft_usleep(philo->table->time_to_eat);
@@ -79,7 +79,7 @@ int	eat(t_philo *philo)
 
 int	philo_sleep(t_philo *philo)
 {
-	if (philo->table->dead == 1 || is_dead(philo))
+	if (philo->table->dead == 1)
 		return (1);
 	pthread_mutex_lock(&philo->table->print);
 	printf("%zd %d is sleeping\n", get_time() - philo->table->start, philo->id);
@@ -90,12 +90,26 @@ int	philo_sleep(t_philo *philo)
 
 int	think(t_philo *philo)
 {
-	if (philo->table->dead == 1 || is_dead(philo))
+	if (philo->table->dead == 1)
 		return (1);
 	pthread_mutex_lock(&philo->table->print);
 	printf("%zd %d is thinking\n", get_time() - philo->table->start, philo->id);
 	pthread_mutex_unlock(&philo->table->print);
 	return (0);
+}
+
+void	routine(t_philo *philo)
+{
+	while (1)
+	{
+		if (eat(philo))
+			return ;
+		if (philo_sleep(philo))
+			return ;
+		if (think(philo))
+			return ;
+	}
+	
 }
 
 int	main(int argc, char **argv)
@@ -106,4 +120,6 @@ int	main(int argc, char **argv)
 		return (1);
 	if (init_forks_and_philos(&table))
 		return (1);
+	table.start = get_time();
+	routine(&table.philos[0]);
 }
