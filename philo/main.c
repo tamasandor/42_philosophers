@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:18:40 by atamas            #+#    #+#             */
-/*   Updated: 2024/07/01 18:28:42 by atamas           ###   ########.fr       */
+/*   Updated: 2024/07/02 21:44:24 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,13 +105,14 @@ void	*routine(void *prog)
 	philo = prog;
 	while (1)
 	{
-		if (eat(philo))
+		if (eat(philo) == 1)
 			break ;
-		if (philo_sleep(philo))
+		if (philo_sleep(philo) == 1)
 			break ;
-		if (think(philo))
+		if (think(philo) == 1)
 			break ;
 	}
+	printf("Routine ended\n");
 	return (NULL);
 }
 
@@ -119,6 +120,7 @@ int	main(int argc, char **argv)
 {
 	t_table	table;
 	int		i;
+	int		j;
 
 	if (!input_valid(argc, argv, &table))
 		return (1);
@@ -131,5 +133,11 @@ int	main(int argc, char **argv)
 		if (pthread_create(&table.philos[i].thread, NULL, &routine, &table.philos[i]) == 1)
 			return (printf("Error\n"), 1);
 		i++;
+	}
+	j = 0;
+	while (j < table.nmbr_of_philos)
+	{
+		pthread_join(table.philos[j].thread, NULL);
+		j++;
 	}
 }
