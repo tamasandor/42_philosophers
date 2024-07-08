@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 20:25:10 by atamas            #+#    #+#             */
-/*   Updated: 2024/07/08 14:56:12 by atamas           ###   ########.fr       */
+/*   Updated: 2024/07/08 19:16:34 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ void	destroy_forks(t_table *table)
 		pthread_mutex_destroy(&table->forks[i]);
 		i++;
 	}
+	pthread_mutex_destroy(&table->deadmutex);
+	pthread_mutex_destroy(&table->print);
 }
 
 int	init_forks_and_philos(t_table *table)

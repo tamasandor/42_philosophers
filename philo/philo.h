@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:34:15 by atamas            #+#    #+#             */
-/*   Updated: 2024/07/03 16:42:53 by atamas           ###   ########.fr       */
+/*   Updated: 2024/07/08 19:16:49 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef struct s_table	t_table;
 
 typedef struct s_philo
 {
-	int				id; // have to start from 1 //
+	int				id;
 	pthread_t		thread;
 	unsigned int	meals;
 	unsigned long int		last_meal;
