@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 20:25:10 by atamas            #+#    #+#             */
-/*   Updated: 2024/07/08 19:16:34 by atamas           ###   ########.fr       */
+/*   Updated: 2024/07/09 19:22:37 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ int	init_forks_and_philos(t_table *table)
 	table->philos[0].rfork = &table->forks[table->nmbr_of_philos - 1];
 	table->philos[0].id = 1;
 	table->philos[0].table = table;
-	table->philos[0].last_meal = get_time();
 	i = 1;
 	while (i < table->nmbr_of_philos)
 	{
@@ -110,7 +109,6 @@ int	init_forks_and_philos(t_table *table)
 		table->philos[i].rfork = &table->forks[i - 1];
 		table->philos[i].id = i + 1;
 		table->philos[i].table = table;
-		table->philos[i].last_meal = get_time();
 		i++;
 	}
 	return (0);

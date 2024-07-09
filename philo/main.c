@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:18:40 by atamas            #+#    #+#             */
-/*   Updated: 2024/07/08 19:15:54 by atamas           ###   ########.fr       */
+/*   Updated: 2024/07/09 19:28:10 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ int	take_right_fork(t_philo *philo)
 		return (1);
 	pthread_mutex_lock(philo->rfork);
 	pthread_mutex_lock(&philo->table->print);
-	printf("%zd %d has taken a fork\n", get_time() - philo->table->start, philo->id);
+	if (philo->table->dead != 1)
+		printf("%zd %d has taken a fork\n", get_time() - philo->table->start, philo->id);
 	pthread_mutex_unlock(&philo->table->print);
 	return (0);
 }
@@ -44,7 +45,8 @@ int	take_left_fork(t_philo *philo)
 		return (1);
 	pthread_mutex_lock(philo->lfork);
 	pthread_mutex_lock(&philo->table->print);
-	printf("%zd %d has taken a fork\n", get_time() - philo->table->start, philo->id);
+	if (philo->table->dead != 1)
+		printf("%zd %d has taken a fork\n", get_time() - philo->table->start, philo->id);
 	pthread_mutex_unlock(&philo->table->print);
 	return (0);
 }
@@ -54,7 +56,8 @@ int	think(t_philo *philo)
 	if (philo->table->dead == 1 || is_dead(philo))
 		return (1);
 	pthread_mutex_lock(&philo->table->print);
-	printf("%zd %d is thinking\n", get_time() - philo->table->start, philo->id);
+	if (philo->table->dead != 1)
+		printf("%zd %d is thinking\n", get_time() - philo->table->start, philo->id);
 	pthread_mutex_unlock(&philo->table->print);
 	return (0);
 }
@@ -83,7 +86,8 @@ int	eat(t_philo *philo)
 			return (pthread_mutex_unlock(philo->rfork), 1);
 	}
 	pthread_mutex_lock(&philo->table->print);
-	printf("%zd %d is eating\n", get_time() - philo->table->start, philo->id);
+	if (philo->table->dead != 1)
+		printf("%zd %d is eating\n", get_time() - philo->table->start, philo->id);
 	pthread_mutex_unlock(&philo->table->print);
 	philo->last_meal = get_time() + philo->table->time_to_eat;
 	philo->meals += 1;
@@ -98,7 +102,8 @@ int	philo_sleep(t_philo *philo)
 	if (philo->table->dead == 1)
 		return (1);
 	pthread_mutex_lock(&philo->table->print);
-	printf("%zd %d is sleeping\n", get_time() - philo->table->start, philo->id);
+	if (philo->table->dead != 1)
+		printf("%zd %d is sleeping\n", get_time() - philo->table->start, philo->id);
 	pthread_mutex_unlock(&philo->table->print);
 	ft_usleep(philo->table->time_to_sleep);
 	return (0);
@@ -109,6 +114,7 @@ void	*routine(void *prog)
 	t_philo	*philo;
 
 	philo = prog;
+	philo->last_meal = philo->table->start;
 	while (1)
 	{
 		if (philo->table->dead == 1)
