@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:18:40 by atamas            #+#    #+#             */
-/*   Updated: 2024/07/09 19:28:10 by atamas           ###   ########.fr       */
+/*   Updated: 2024/07/09 19:57:16 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,14 @@ void	*routine(void *prog)
 	return (NULL);
 }
 
+void	case_one(t_table *table)
+{
+	table->start = get_time();
+	printf("%zd %d has taken a fork\n", get_time() - table->start, 1);
+	ft_usleep(table->time_to_die);
+	printf("%zd %d died\n", get_time() - table->start, 1);
+}
+
 int	main(int argc, char **argv)
 {
 	t_table	table;
@@ -137,6 +145,8 @@ int	main(int argc, char **argv)
 		return (1);
 	if (init_forks_and_philos(&table))
 		return (1);
+	if (table.nmbr_of_philos == 1)
+		return (case_one(&table), 0);
 	table.start = get_time();
 	i = 0;
 	while (i < table.nmbr_of_philos)
