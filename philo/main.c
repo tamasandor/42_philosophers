@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:18:40 by atamas            #+#    #+#             */
-/*   Updated: 2024/07/09 19:57:16 by atamas           ###   ########.fr       */
+/*   Updated: 2024/09/18 14:54:13 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,16 @@ int	take_left_fork(t_philo *philo)
 {
 	if (philo->table->dead == 1 || is_dead(philo))
 		return (1);
-	pthread_mutex_lock(philo->lfork);
+	pthread_mutex_lock(&philo->table->fork_state);
+	if (&philo->lfork == 0)
+	{
+		
+	}
 	pthread_mutex_lock(&philo->table->print);
 	if (philo->table->dead != 1)
 		printf("%zd %d has taken a fork\n", get_time() - philo->table->start, philo->id);
 	pthread_mutex_unlock(&philo->table->print);
+	pthread_mutex_unlock(&philo->table->fork_state);
 	return (0);
 }
 
