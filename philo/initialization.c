@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 20:25:10 by atamas            #+#    #+#             */
-/*   Updated: 2024/09/18 13:52:58 by atamas           ###   ########.fr       */
+/*   Updated: 2024/09/20 14:58:58 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,15 +92,14 @@ int	init_forks_and_philos(t_table *table)
 		table->forks[i] = 0;
 		i++;
 	}
-	table->philos[0].lfork = &table->forks[0];
-	table->philos[0].rfork = &table->forks[table->nmbr_of_philos - 1];
-	table->philos[0].id = 1;
-	table->philos[0].table = table;
-	i = 1;
+	i = 0;
 	while (i < table->nmbr_of_philos)
 	{
+		if (i == 0)
+			table->philos[i].rfork = &table->forks[table->nmbr_of_philos - 1];
+		else
+			table->philos[i].rfork = &table->forks[i - 1];
 		table->philos[i].lfork = &table->forks[i];
-		table->philos[i].rfork = &table->forks[i - 1];
 		table->philos[i].id = i + 1;
 		table->philos[i].table = table;
 		i++;
