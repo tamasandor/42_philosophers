@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 20:25:10 by atamas            #+#    #+#             */
-/*   Updated: 2024/09/20 14:58:58 by atamas           ###   ########.fr       */
+/*   Updated: 2024/09/22 20:49:18 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	input_valid(int argc, char **argv, t_table *table)
 	return (1);
 }
 
-void	destroy_mutexes(t_table *table)
+void	destroy_forks(t_table *table)
 {
 	pthread_mutex_destroy(&table->fork_state);
 	pthread_mutex_destroy(&table->deadmutex);
@@ -87,6 +87,10 @@ int	init_forks_and_philos(t_table *table)
 	i = 0;
 	if (pthread_mutex_init(&table->fork_state, NULL) != 0)
 		return (printf("Error initializing mutex for forks\n"), 1);
+	if (pthread_mutex_init(&table->deadmutex, NULL) != 0)
+		return (printf("Error initializing deadmutex\n"), 1);
+	if (pthread_mutex_init(&table->print, NULL) != 0)
+		return (printf("Error initializing print mutex\n"), 1);
 	while (i < table->nmbr_of_philos)
 	{
 		table->forks[i] = 0;

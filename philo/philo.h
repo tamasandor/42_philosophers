@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:34:15 by atamas            #+#    #+#             */
-/*   Updated: 2024/09/18 13:53:07 by atamas           ###   ########.fr       */
+/*   Updated: 2024/09/23 00:41:27 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,10 @@ typedef struct s_table
 int		input_valid(int argc, char **argv, t_table *table);
 int		ft_atol(char *string, int *error);
 void	fill_values(int argc, char **argv, t_table *table, int *error);
-void	destroy_mutexes(t_table *table);
+void	destroy_forks(t_table *table);
 int		init_forks_and_philos(t_table *table);
 void	ft_usleep(size_t mseconds);
 size_t	get_time(void);
+int	take_forks(t_philo *philo);
 
 #endif
