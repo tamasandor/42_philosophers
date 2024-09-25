@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 17:34:15 by atamas            #+#    #+#             */
-/*   Updated: 2024/09/23 00:41:27 by atamas           ###   ########.fr       */
+/*   Updated: 2024/09/24 16:33:17 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ typedef struct s_philo
 	pthread_t		thread;
 	unsigned int	meals;
 	unsigned long int		last_meal;
-	int	*rfork;
-	int	*lfork;
+	pthread_mutex_t	*rfork;
+	pthread_mutex_t	*lfork;
 	t_table			*table;
 }	t_philo;
 
@@ -40,7 +40,7 @@ typedef struct s_table
 	unsigned int	time_to_sleep;
 	int				rounds;
 	size_t			start;
-	int				forks[200];
+	pthread_mutex_t	forks[200];
 	pthread_mutex_t	fork_state;
 	t_philo			philos[200];
 	pthread_mutex_t	deadmutex;

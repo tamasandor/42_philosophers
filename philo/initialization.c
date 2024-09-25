@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 20:25:10 by atamas            #+#    #+#             */
-/*   Updated: 2024/09/23 12:17:36 by atamas           ###   ########.fr       */
+/*   Updated: 2024/09/24 16:28:47 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,15 @@ int	input_valid(int argc, char **argv, t_table *table)
 
 void	destroy_forks(t_table *table)
 {
-	pthread_mutex_destroy(&table->fork_state);
+	int	i;
+
+	i = 0;
+	while (i < table->nmbr_of_philos)
+	{
+		pthread_mutex_destroy(&table->forks[i]);
+		i++;
+	}
+	
 	pthread_mutex_destroy(&table->deadmutex);
 	pthread_mutex_destroy(&table->print);
 }
@@ -84,16 +92,15 @@ int	init_forks_and_philos(t_table *table)
 {
 	int	i;
 
-	i = 0;
-	if (pthread_mutex_init(&table->fork_state, NULL) != 0)
-		return (printf("Error initializing mutex for forks\n"), 1);
 	if (pthread_mutex_init(&table->deadmutex, NULL) != 0)
 		return (printf("Error initializing deadmutex\n"), 1);
 	if (pthread_mutex_init(&table->print, NULL) != 0)
 		return (printf("Error initializing print mutex\n"), 1);
+	i = 0;
 	while (i < table->nmbr_of_philos)
 	{
-		table->forks[i] = 0;
+		if (pthread_mutex_init(&table->forks[i], NULL) != 0)
+			return (printf("Error initializing mutex for forks\n"), 1);
 		i++;
 	}
 	i = 0;
