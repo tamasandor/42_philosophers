@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 20:25:10 by atamas            #+#    #+#             */
-/*   Updated: 2024/09/24 16:28:47 by atamas           ###   ########.fr       */
+/*   Updated: 2024/09/28 03:22:28 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	fill_values(int argc, char **argv, t_table *table, int *error)
 	table->time_to_eat = ft_atol(argv[3], error);
 	table->time_to_sleep = ft_atol(argv[4], error);
 	table->dead = 0;
+	table->full = 0;
 }
 
 int	input_valid(int argc, char **argv, t_table *table)
@@ -73,19 +74,20 @@ int	input_valid(int argc, char **argv, t_table *table)
 	return (1);
 }
 
-void	destroy_forks(t_table *table)
+void	clean_exit(t_table *table)
 {
 	int	i;
 
 	i = 0;
 	while (i < table->nmbr_of_philos)
 	{
-		pthread_mutex_destroy(&table->forks[i]);
+		pthread_join(table->philos[i].thread, NULL);
+		pthread_mutex_destroy(table->philos[i].lfork);
 		i++;
 	}
-	
 	pthread_mutex_destroy(&table->deadmutex);
 	pthread_mutex_destroy(&table->print);
+	pthread_mutex_destroy(&table->mealmutex);
 }
 
 int	init_forks_and_philos(t_table *table)
@@ -96,16 +98,13 @@ int	init_forks_and_philos(t_table *table)
 		return (printf("Error initializing deadmutex\n"), 1);
 	if (pthread_mutex_init(&table->print, NULL) != 0)
 		return (printf("Error initializing print mutex\n"), 1);
+	if (pthread_mutex_init(&table->mealmutex, NULL) != 0)
+		return (printf("Error initializing print mutex\n"), 1);
 	i = 0;
 	while (i < table->nmbr_of_philos)
 	{
 		if (pthread_mutex_init(&table->forks[i], NULL) != 0)
 			return (printf("Error initializing mutex for forks\n"), 1);
-		i++;
-	}
-	i = 0;
-	while (i < table->nmbr_of_philos)
-	{
 		if (i == 0)
 			table->philos[i].rfork = &table->forks[table->nmbr_of_philos - 1];
 		else
@@ -113,6 +112,8 @@ int	init_forks_and_philos(t_table *table)
 		table->philos[i].lfork = &table->forks[i];
 		table->philos[i].id = i + 1;
 		table->philos[i].table = table;
+		table->philos[i].meals = 0;
+		table->philos[i].last_meal = 0;
 		i++;
 	}
 	return (0);
