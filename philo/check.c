@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 03:03:11 by atamas            #+#    #+#             */
-/*   Updated: 2024/09/28 03:12:21 by atamas           ###   ########.fr       */
+/*   Updated: 2024/09/28 19:38:07 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ int	dead_or_full(t_philo *philo)
 	int	result;
 
 	pthread_mutex_lock(&philo->table->deadmutex);
-	result = philo->table->dead;
-	pthread_mutex_unlock(&philo->table->deadmutex);
 	pthread_mutex_lock(&philo->table->mealmutex);
+	result = philo->table->dead;
 	result += philo->table->full;
+	pthread_mutex_unlock(&philo->table->deadmutex);
 	pthread_mutex_unlock(&philo->table->mealmutex);
 	return (result);
 }
@@ -67,7 +67,9 @@ int	check_is_full(t_table *table)
 		pthread_mutex_unlock(&table->mealmutex);
 		i++;
 	}
+	pthread_mutex_lock(&table->mealmutex);
 	table->full = 1;
+	pthread_mutex_unlock(&table->mealmutex);
 	return (1);
 }
 

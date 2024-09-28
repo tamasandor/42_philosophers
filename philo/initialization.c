@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 20:25:10 by atamas            #+#    #+#             */
-/*   Updated: 2024/09/28 03:22:28 by atamas           ###   ########.fr       */
+/*   Updated: 2024/09/28 19:32:03 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,11 @@ void	clean_exit(t_table *table)
 	while (i < table->nmbr_of_philos)
 	{
 		pthread_join(table->philos[i].thread, NULL);
+		i++;
+	}
+	i = 0;
+	while (i < table->nmbr_of_philos)
+	{
 		pthread_mutex_destroy(table->philos[i].lfork);
 		i++;
 	}

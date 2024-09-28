@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 03:09:11 by atamas            #+#    #+#             */
-/*   Updated: 2024/09/28 03:12:13 by atamas           ###   ########.fr       */
+/*   Updated: 2024/09/28 19:32:52 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	take_forks(t_philo *philo)
 	if (philo->id % 2 == 1 && philo->meals == 0)
 	{
 		print_message(philo, "is thinking");
-		ft_usleep(philo->table->time_to_eat / 2);
+		ft_usleep(philo->table->time_to_die / 2);
 	}
 	if (philo->id % 2 == 0)
 	{
