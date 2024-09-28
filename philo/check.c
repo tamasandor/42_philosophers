@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 03:03:11 by atamas            #+#    #+#             */
-/*   Updated: 2024/09/28 19:38:07 by atamas           ###   ########.fr       */
+/*   Updated: 2024/09/28 19:56:11 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	check_is_dead(t_table *table)
 	while (i < table->nmbr_of_philos)
 	{
 		pthread_mutex_lock(&table->mealmutex);
-		if (get_time() >= table->philos[i].last_meal)
+		if (get_time() > table->philos[i].last_meal)
 		{
 			pthread_mutex_unlock(&table->mealmutex);
 			print_message(&table->philos[i], "died");
